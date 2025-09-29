@@ -99,8 +99,13 @@ wget http://download.proxmox.com/images/system/debian-12-standard_12.12-1_amd64.
 ```
 
 ```
-/!\ The template need to be supported by the Proxmox PVE version
+/!\
+
+The LXC template need to be supported by the Proxmox PVE version
+
 Example: Debian 13 is not supported by Proxmox 8.x. But Debian 12 is OK.
+
+/!\
 ```
 
 ## On Proxmox PVE - Create a empty LXC from template with specific id
@@ -113,7 +118,9 @@ Check which storage you can use. In my case, "zfs1"
 
 Choose an ID. I choose "655"
 
+```
 pct create 655 /var/lib/vz/template/cache/debian-12-standard_12.12-1_amd64.tar.zst --hostname testlxc --memory 1024 --storage zfs1 --rootfs zfs1:8 --unprivileged 1 --ignore-unpack-errors
+```
 
 ## On OpenVZ Virtuozzo hypervisor - Create a backup with compiled vzdump
 
@@ -179,21 +186,26 @@ pct restore 655 /var/lib/vz/dump/vzdump-lxc-655-2025_09_23-17_53_52.tar --storag
 
 ##### RAM size problem or SWAP size problem
 
+```
 vm 655 - unable to parse value of 'memory' - type check ('integer') failed - got '920.07421875'
 vm 655 - unable to parse value of 'swap' - type check ('integer') failed - got '920.07421875'
 400 Result verification failed
 swap: type check ('integer') failed - got '920.07421875'
 memory: type check ('integer') failed - got '920.07421875'
 pct config <vmid> [OPTIONS]
+```
 
 To resolv :
 
+```
 To save the RAM problem :
+```
 
 ```
 pct stop 655
 pct set 655 --memory 512
 ```
+
 
 To save the SWAP problem :
 
@@ -204,9 +216,10 @@ pct set 655 --swap 512
 
 ### Set the network interface
 
-Identify your bridge interface and your vlan
+Identify your bridge interface and your vlan.
 Set the IP and the gateway. 
 Enable or not the firewall.
+
 
 ```
 pct set 655 --net0 name=eth0,bridge=vmbr0,tag=xx,firewall=0,ip=x.x.x.x/24,gw=x.x.x.x
