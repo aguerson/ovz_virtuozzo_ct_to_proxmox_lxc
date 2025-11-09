@@ -1,0 +1,40 @@
+Name: vzdump
+Vendor: Proxmox
+Packager: Proxmox Server Solutions GmbH <http://www.proxmox.com/>
+Version: @@VERSION@@
+Release: @@PKGRELEASE@@
+BuildArch: noarch
+BuildPreReq: perl
+Requires: perl, vzctl, cstream, rsync, smtpdaemon, perl(LockFile::Simple)
+Summary: OpenVZ backup scripts
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+URL: http://www.proxmox.com/
+Source: %{name}-%{version}.tar.gz
+License: GPL
+Group: Utilities
+
+%description
+This package contains the vzdump script to backup openvz images.
+
+%prep
+%setup
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%attr(755,root,root) %_sbindir/vzdump
+%attr(644,root,root) %_mandir/man1/vzdump.1.*
+%attr(644,root,root) /usr/share/perl5/PVE/VZDump.pm
+%attr(644,root,root) /usr/share/perl5/PVE/VZDump/Plugin.pm
+%attr(644,root,root) /usr/share/perl5/PVE/VZDump/OpenVZ.pm
+%doc hook-script.pl ChangeLog changelog.Debian copyright
+
+%changelog
+* Sun Nov 9 2025 Aurelien GUERSON <aurelien.guerson@from.the.net> 1.2-5
+- remove vzrestore

@@ -8,10 +8,10 @@ Everything is backuped and copied. Nothing is destroy. You have to do it at the 
 
 ## Packages
 
-Need gcc
+Need gcc and make
 
 ```
-yum -y install gcc
+yum -y install gcc make
 ```
 
 ```
@@ -49,6 +49,14 @@ md5sum sources/cstream-3.2.1-8.fc39.src.rpm
 e8e85d8bf46a0d9045bec61cf527e2eb  sources/cstream-3.2.1-8.fc39.src.rpm
 ```
 
+```
+vzdump-1.2.tar.gz
+from
+https://download.openvz.org/contrib/utils/vzdump/vzdump-1.2.tar.gz
+md5sum sources/vzdump-1.2.tar.gz
+fcdfd488282cdee892cfac4c12fdc555  sources/vzdump-1.2.tar.gz
+```
+
 ## On OpenVZ Virtuozzo hypervisor - Compiling and installing sources on an OpenVZ - Virtuozzo 7 server
 
 Manually
@@ -77,6 +85,42 @@ With script
 chmod +x .\install_vzdump.sh
 .\install_vzdump.sh
 ```
+
+If you are not using the community version, maybe you could have some problems or conflicts between "vzdump" package and your "vzbackup" package. The reason is "vzrestore", which is present is both packages.
+
+In this case, you need to install vzdump manually, like a new Perl lib.
+
+Just follow these steps :
+
+```
+cd sources
+tar -zxvf vzdump-1.2.tar.gz
+cp vzdump-1.2/Makefile vzdump-1.2/Makefile.old
+cp new_Makefile vzdump-1.2/Makefile
+cp new_vzdump.spec.in vzdump-1.2/vzdump.spec.in
+cd vzdump-1.2
+make
+```
+
+Make will create the file "vzdump-1.2-5.noarch.rpm"
+
+You can find it in the packages files. I generated it. I removed "vzrestore" from the package.
+
+```
+vzdump-1.2-5.noarch.rpm
+from
+https://github.com/aguerson/ovz_to_proxmox/raw/refs/heads/main/packages/vzdump-1.2-5.noarch.rpm
+md5sum packages/vzdump-1.2-5.noarch.rpm
+bc4fd63a09dcdbce1a1df435b1856bcd  packages/vzdump-1.2-5.noarch.rpm
+```
+
+You can now install it
+
+```
+yum -y install ./vzdump-1.2-5.noarch.rpm
+```
+
+Try, and let me known if now it is OK.
 
 ## On Proxmox PVE - Download template
 
